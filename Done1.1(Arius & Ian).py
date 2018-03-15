@@ -1,4 +1,5 @@
 from PIL import Image
+import Tkinter
 import binascii
 import numpy as np
 
@@ -8,8 +9,7 @@ def rgb2hex(r, g, b):
 
 def hex2rgb(hexcode):
     
-    return tuple(map(ord, hexcode[1:].decode('hex')))
-    
+    return tuple(map(ord, hexcode[1:].decode('hex'))) 
 
 def str2bin(message):
     print 'str2bin before:'
@@ -122,3 +122,18 @@ def retr(filename):
 		return bin2str(binary)
 	return "Incorrect Image Mode, Couldn't Retrieve"
 
+##########
+#Tkinter GUI
+##########
+
+#Root Window
+root = Tkinter.Tk()
+root.wm_title('Steganography Hider/Retreiver')
+
+#Model
+
+
+#View
+
+
+#Controller
