@@ -1,34 +1,44 @@
 from PIL import Image
+import Tkinter
 import binascii
 import numpy as np
-import Tkinter
 
 
-#view
-root = Tkinter.Tk()
-
-b = Tkinter.Label(root, text='type text, and file name in \nhide box to hide\nand do the same in \nthe retive box to \nto retrive.')
-b.grid(row=0, column=1)
-
-textbox = Tkinter.text(root, text='l' )
-textbox.grid(row=2, column=0)
 
 
-root.mainloop()
+##########
+#Functions
+##########
 
 def rgb2hex(r, g, b):
-	return '#{:02x}{:02x}{:02x}'.format(r, g, b)
+    return '#{:02x}{:02x}{:02x}'.format(r, g, b)
 
 def hex2rgb(hexcode):
-	return tuple(map(ord, hexcode[1:].decode('hex')))
+    
+    return tuple(map(ord, hexcode[1:].decode('hex'))) 
 
+#Returns hexadecimal value of the user's string.
 def str2bin(message):
-	binary = bin(int(binascii.hexlify(message), 16)) 
-	return binary[2:]
+    print 'str2bin before:'
+    print message
+    print 'str2bin step1:'
+    print binascii.hexlify(message)
+    print 'str2bin step2:'
+    print int(binascii.hexlify(message), 16)
+    binary = bin(int(binascii.hexlify(message), 16))
+    print 'str2bin Final:'
+    print binary 
+    return binary[2:]
 
 def bin2str(binary):
-	message = binascii.unhexlify('%x' % (int('0b'+binary,2)))
-	return message
+    print 'bin2str Before:'
+    print binary
+    print 'bin2str step1:'
+    print int('0b'+binary,2)
+    message = binascii.unhexlify('%x' % (int('0b'+binary,2)))
+    print 'bin2str Final:'
+    print message
+    return message
 
 def encode(hexcode, digit):
 	if hexcode[-1] in ('0','1', '2', '3', '4', '5'):
@@ -43,10 +53,8 @@ def decode(hexcode):
 	else:
 		return None
 
-def hide(filename, message):
-#        rgb = ('r', 'g', 'b')
-            
-            
+def hide(filename, message):  
+        message = message_entry.get(0)        
 	img = Image.open(filename)
 	binary = str2bin(message) + '1111111111111110'
 	if img.mode in ('RGBA'):
@@ -57,20 +65,39 @@ def hide(filename, message):
 		newData = []
 		digit = 0
 		temp = ''
+		
+		'''#rgb2hex feedback
+		print 'rgb2hex Before:'
+                print '(',r,',',g,',',b,')'
+                print 'rgb2hex After:'
+                print '#{:02x}{:02x}{:02x}'.format(r, g, b)
+                
+                #hex2rgb feedback
+                print 'hex2rgb Before:'
+                print hexcode
+                print 'Hex2rgb step1:'
+                print hexcode[1:].decode('hex')
+                print 'hex2rgb step2:'
+                print map(ord, hexcode[1:].decode('hex'))
+                print 'hex2rgb final:'
+                print tuple(map(ord, hexcode[1:].decode('hex')))'''
+                
 		for item in datas:
-			if (digit < len(binary)):
-				newpix = encode(rgb2hex(item[0],item[1],item[2]),binary[digit])
-				if newpix == None:
-					newData.append(item)
-				else:
-					r, g, b = hex2rgb(newpix)
-					newData.append((r,g,b,255))
-					digit += 1
+	            rgb2hexfdbk = 0
+		    hex2rgbfdbk = 0
+                    if (digit < len(binary)):
+			newpix = encode(rgb2hex(item[0],item[1],item[2]),binary[digit])
+			if newpix == None:
+				newData.append(item)
 			else:
+				r, g, b = hex2rgb(newpix)
+				newData.append((r,g,b,255))
+				digit += 1
+                    else:
 				newData.append(item)	
 		img.putdata(newData)
 		img.save(filename, "PNG")
-		print 'After'
+		print 'RGB After'
 		print list (datas[1]),list (datas[2]),list (datas[3]),list (datas[4]),list (datas[5]),list (datas[6]),list (datas[7]),list (datas[8]),list (datas[9]),list (datas[10])
 		print 'Some times none the of the first ten RGB values are not changed also can been seen better on black images'
 		return "Completed!"
@@ -101,3 +128,32 @@ def retr(filename):
 		return bin2str(binary)
 	return "Incorrect Image Mode, Couldn't Retrieve"
 	
+##########
+#Tkinter GUI
+##########
+
+#Root Window
+root = Tkinter.Tk()
+root.wm_title('Steganography Hider/Retreiver')
+
+#Model
+filename = Tkinter.StringVar()
+filename.set('')
+message = Tkinter.StringVar()
+message.set('')
+
+
+#View
+file_entry = Tkinter.Entry(root, textvariable=filename)
+file_entry.grid(row=0,column=0)
+message_entry = Tkinter.Text(root)
+
+
+#Controller
+hide_button = Tkinter.Button(root, command=hide,text='Hide')
+hide_button.grid(row=0, column=1)
+retr_button = Tkinter.Button(root, command=retr,text='Retr')
+retr_button.grid(row=1, column=1)
+
+#Main Loop
+root.mainloop()
