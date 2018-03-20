@@ -12,23 +12,27 @@ root = Tkinter.Tk()
 root.wm_title('Steganography Hider/Retreiver')
 
 #Model
-filename = Tkinter.StringVar()
-filename.set('')
-message = Tkinter.StringVar()
-message.set('')
+global filenameStr
+filenameStr = Tkinter.StringVar()
+filenameStr.set('')
+global messageStr
+messageStr = Tkinter.StringVar()
+messageStr.set('')
 
 
 #View
-file_entry = Tkinter.Entry(root, textvariable=filename)
-file_entry.grid(row=2, column=0, columnspan=2)
-message_entry = Tkinter.Text(root)
-message_entry.grid(row=1,column=0)
+filenameEntry = Tkinter.Entry(root)
+filenameEntry.grid(row=2, column=0, columnspan=2)
+messageEntry = Tkinter.Text(root)
+messageEntry.grid(row=1,column=0)
 
 
 #Controller
 
 #Message Hider
-def hide(filename, message = message_entry.get(root,1)):          
+def hide():  
+        filename = filenameEntry.get()
+        message = messageEntry.get()        
 	img = Image.open(filename)
 	binary = str2bin(message) + '1111111111111110'
 	if img.mode in ('RGBA'):
