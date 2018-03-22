@@ -3,37 +3,33 @@ import Tkinter
 import binascii
 import numpy as np
 
-##########
-#Tkinter GUI
-##########
+#############
+#Tkinter GUI#
+#############
 
-#Root Window
+#Root Window#
 root = Tkinter.Tk()
 root.wm_title('Steganography Hider/Retreiver')
 
-#Model
-global filenameStr
-filenameStr = Tkinter.StringVar()
-filenameStr.set('')
-global messageStr
-messageStr = Tkinter.StringVar()
-messageStr.set('')
-
-
-#View
+#View#
 filenameEntry = Tkinter.Entry(root)
 filenameEntry.grid(row=2, column=0, columnspan=2)
 messageEntry = Tkinter.Text(root)
 messageEntry.grid(row=1,column=0)
 
+#Model#
+global filename
+global message
+filename = Tkinter.StringVar()
+filename.set(str(filenameEntry.get()))
+message = Tkinter.StringVar()
+message.set(str(messageEntry.get("1.0")))
 
-#Controller
+#Controller#
 
 #Message Hider
-def hide():  
-        filename = filenameEntry.get()
-        message = messageEntry.get()        
-	img = Image.open(filename)
+def hide(message, filename):      
+	img = Image.open(filename.get())
 	binary = str2bin(message) + '1111111111111110'
 	if img.mode in ('RGBA'):
 		img = img.convert('RGBA')
@@ -104,16 +100,15 @@ def retr(filename):
 		return bin2str(binary)
 	return "Incorrect Image Mode, Couldn't Retrieve"
 
-
-hide_button = Tkinter.Button(root, command=hide,text='Hide')
+hide_button = Tkinter.Button(root, command= lambda: hide(message,filename),text='Hide')
 hide_button.grid(row=0, column=1)
-retr_button = Tkinter.Button(root, command=retr,text='Retr')
+retr_button = Tkinter.Button(root, command= lambda: retr(message,filename),text='Retr')
 retr_button.grid(row=1, column=1)
 
 
-##########
-#Functions
-##########
+###########
+#Functions#
+###########
 
 def rgb2hex(r, g, b):
     return '#{:02x}{:02x}{:02x}'.format(r, g, b)
