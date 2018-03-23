@@ -21,16 +21,17 @@ messageEntry.grid(row=1,column=0)
 global filename
 global message
 filename = Tkinter.StringVar()
-filename.set(str(filenameEntry.get()))
+filename.set(filenameEntry.get())
 message = Tkinter.StringVar()
-message.set(str(messageEntry.get("1.0")))
+message.set(messageEntry.get("1.0", Tkinter.END))
 
 #Controller#
 
 #Message Hider
-def hide(message, filename):      
-	img = Image.open(filename.get())
-	binary = str2bin(message) + '1111111111111110'
+def hide(message, filename): 
+        print(filename)   
+	img = Image.open(str(filename))
+	binary = str2bin(str(message)) + '1111111111111110'
 	if img.mode in ('RGBA'):
 		img = img.convert('RGBA')
 		datas = img.getdata()
@@ -102,7 +103,7 @@ def retr(filename):
 
 hide_button = Tkinter.Button(root, command= lambda: hide(message,filename),text='Hide')
 hide_button.grid(row=0, column=1)
-retr_button = Tkinter.Button(root, command= lambda: retr(message,filename),text='Retr')
+retr_button = Tkinter.Button(root, command= lambda: retr(filename),text='Retr')
 retr_button.grid(row=1, column=1)
 
 
@@ -119,25 +120,25 @@ def hex2rgb(hexcode):
 
 #Returns hexadecimal value of the user's string.
 def str2bin(message):
-    print 'str2bin before:'
+    """print 'str2bin before:'
     print message
     print 'str2bin step1:'
-    print binascii.hexlify(message)
+    print binascii.hexlify(str(message))
     print 'str2bin step2:'
-    print int(binascii.hexlify(message), 16)
-    binary = bin(int(binascii.hexlify(message), 16))
-    print 'str2bin Final:'
-    print binary 
+    print int(binascii.hexlify(str(message)), 16)"""
+    binary = bin(int(binascii.hexlify(str(message)), 16))
+    """print 'str2bin Final:'
+    print binary"""
     return binary[2:]
 
 def bin2str(binary):
-    print 'bin2str Before:'
+    """print 'bin2str Before:'
     print binary
     print 'bin2str step1:'
-    print int('0b'+binary,2)
+    print int('0b'+binary,2)"""
     message = binascii.unhexlify('%x' % (int('0b'+binary,2)))
-    print 'bin2str Final:'
-    print message
+    """print 'bin2str Final:'
+    print message"""
     return message
 
 def encode(hexcode, digit):
